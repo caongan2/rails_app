@@ -1,0 +1,51 @@
+<div class="container p-5 mt-5" style="background-color: #f0f2f5; width: 55%">
+  <form action="/posts" accept-charset="UTF-8" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="authenticity_token" value="...">
+    <input type="text" name="user_id" value="<%= @auth.id %>" hidden="hidden">
+    <div class="form-outline mb-4">
+      <textarea class="form-control" id="form4Example3" name="content" placeholder="Content" rows="4"></textarea>
+    </div>
+    <div class="form-outline mb-4">
+      <label for="upload-photo" id="label">Choose image...</label>
+      <input type="file" id="upload-photo" name="image">
+    </div>
+    <div class="form-outline mb-4">
+      <button type="submit" name="commit" class="btn btn-success">Post</button>
+    </div>
+    <style>
+        label {
+            cursor: pointer;
+        }
+
+        #upload-photo {
+            opacity: 0;
+            position: absolute;
+            z-index: -1;
+        }
+    </style>
+  </form>
+
+  <div class="row w-70">
+    <% @posts.each do |post| %>
+      <div class="container p-5 mb-5" style="background-color: white; border-radius: 2rem; box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%)">
+        <div class="row">
+          <div class="col-md-3 mb-2">
+            <h3 style="font-weight: bold;"><%= post.user.username %></h3>
+            <p><%= post.created_at.strftime('%Y-%m-%d') %></p>
+          </div>
+          <div class="col-md-2">
+
+          </div>
+        </div>
+        <div class="row mb-5">
+          <a href="">
+            <%= post.content %>
+          </a>
+        </div>
+        <div class="row">
+          <%= image_tag post.image unless post.image.blank? %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
