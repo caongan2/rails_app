@@ -1,9 +1,9 @@
 <div class="container p-5 mt-5" style="background-color: #f0f2f5; width: 55%">
   <form action="/posts" accept-charset="UTF-8" method="post" enctype="multipart/form-data">
     <input type="hidden" name="authenticity_token" value="...">
-    <input type="text" name="user_id" value="<%= @auth.id %>" hidden="hidden">
+    <input type="text" name="post[user_id]" value="<%= current_user.id unless current_user.blank? %>>" hidden="hidden">
     <div class="form-outline mb-4">
-      <textarea class="form-control" id="form4Example3" name="content" placeholder="Content" rows="4"></textarea>
+      <textarea class="form-control" id="form4Example3" name="post[content]" placeholder="Content" rows="4"></textarea>
     </div>
     <div class="form-outline mb-4">
       <label for="upload-photo" id="label">Choose image...</label>
@@ -31,30 +31,26 @@
         <div class="row">
           <div class="col-md-10 mb-2">
             <div class="row">
-              <div class="col-md-2">
-                <%= image_tag post.user.avatar, style: "width:80%; border-radius:50%" unless post.user.avatar.blank? %>
-              </div>
               <div class="col-md-10">
-                <h3 style="font-weight: bold;"><%= post.user.username %></h3>
+                <% if post.user %>
+                <%= link_to format_name(post.user), profile_path(post.user.id), style: "font-weight: bold;" %>
+                  <% end %>
               </div>
             </div>
             <div class="row">
-              <div class="col-md-2"></div>
               <div class="col-md-10">
                   <%= post.created_at.strftime('%d - Tháng %m, %Y lúc %I : %M') %>
               </div>
             </div>
           </div>
           <div class="col-md-1">
-            <% if post.user_id == @auth.id %>
               <div class="row">
                 <button class="btn btn-danger">delete</button>
               </div>
-            <% end %>
           </div>
         </div>
         <div class="row mb-5">
-          <a href="">
+          <a>
             <%= post.content %>
           </a>
         </div>

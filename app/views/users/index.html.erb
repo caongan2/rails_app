@@ -1,0 +1,11 @@
+<div class="container">
+    <ul class="list-group text-center">
+      <% @users.each do |user| %>
+      <li class="list-group-item">
+        <a href="">
+          <%= format_name(user) %>
+        </a>
+      </li>
+        <% end %>
+    </ul>
+</div>

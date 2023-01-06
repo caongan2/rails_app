@@ -7,6 +7,7 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag 'application', 'data-turbo-track': 'reload' %>
     <%= javascript_importmap_tags %>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -18,27 +19,70 @@
 
   <body>
 
-  <nav class="navbar navbar-expand-lg navbar-light bg-light" style="position: fixed; width: 100%; margin-top: -3% !important;">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" style="position: fixed; width: 100%; margin-top: -1% !important;">
     <div class="container-fluid">
       <div class="collapse navbar-collapse" id="navbarScroll">
         <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <%= link_to 'Home', root_path, class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %>
           </li>
+          <% if current_user && current_user.is_admin == 1 %>
           <li class="nav-item">
-            <a class="nav-link" href="#">All users</a>
+            <%= link_to 'All users', users_path, class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/logout" tabindex="-1" aria-disabled="true">Logout</a>
-          </li>
+            <% end %>
         </ul>
         <form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
+          <div class="row">
+            <div class="col-md-7">
+              <div class="row">
+                <div class="col-md-8">
+                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                </div>
+                <div class="col-md-2">
+                  <button class="btn btn-outline-success" type="submit">Search</button>
+                </div>
+              </div>
+            </div>
+            <% if current_user %>
+              <div class="col-md-5">
+                <div class="dropdown">
+                  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    Auth
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><%= link_to current_user.username, profile_path(current_user.id), class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %></li>
+                    <li><%= link_to 'Edit profile', edit_user_registration_path, class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %></li>
+                    <li>
+                      <%= link_to "logout", destroy_user_session_path, data: { turbo_method: :delete}, class: "nav-link", "aria-disabled" => "true", tabindex: "-1" %>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <script type="text/javascript" charset="utf-8">
+                $(document).ready(function () {
+                    let flag = true
+                  $('#dropdownMenuLink').on('click', function () {
+                      flag = !flag
+                      if (flag === true) {
+                          $('.dropdown-menu').css('display', 'block')
+                      } else {
+                          $('.dropdown-menu').css('display', 'none')
+                      }
+                  })
+                })
+              </script>
+              <% end %>
+          </div>
         </form>
       </div>
     </div>
   </nav>
-    <%= yield %>
+  <div class="container-fluid">
+    <p class="notice"><%= notice %></p>
+    <p class="alert"><%= alert %></p>
+  </div>
+
+  <%= yield %>
   </body>
 </html>

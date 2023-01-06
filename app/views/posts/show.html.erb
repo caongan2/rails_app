@@ -1,0 +1,36 @@
+<div class="container" style="background-color: white; border-radius: 2rem; box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%)">
+  <div class="row mt-5">
+    <div class="col-md-2">
+      <%= image_tag @post.user_avatar, style: "width: 50%; border-radius:50%; margin-left:109px; margin-top:19px" %>
+    </div>
+    <div class="col-md-9 mt-5"  style="text-transform: capitalize; font-weight: bold">
+      <%= @post.user_username %>
+    </div>
+    <div class="col-md-1 mt-5">
+      <button class="btn btn-danger">Delete</button>
+    </div>
+  </div>
+  <div class="row mb-4">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+      <span><%= @post.created_at.strftime('%d - Tháng %m, %Y lúc %I : %M') %></span>
+    </div>
+  </div>
+  <div class="row mb-5">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+      <p style="max-width: 95%">
+        <%= @post.content %>
+      </p>
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+      <%= image_tag @post.image unless @post.image.blank? %>
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+  <div class="row mt-5"></div>
+</div>

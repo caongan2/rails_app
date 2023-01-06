@@ -1,0 +1,95 @@
+<div class="container w-50">
+  <div class="row">
+    <img src="https://nld.mediacdn.vn/thumb_w/684/2019/4/3/avengers-endgame-poster-og-social-crop-15542720808371479664269.jpg" alt="">
+  </div>
+  <% if current_user.id == @user.id %>
+  <div class="row mt-5">
+    <form action="/posts" accept-charset="UTF-8" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="authenticity_token" value="...">
+      <input type="text" name="post[user_id]" value="<%= current_user.id unless current_user.blank? %>>" hidden="hidden">
+      <div class="form-outline mb-4">
+        <textarea class="form-control" id="form4Example3" name="post[content]" placeholder="Content" rows="4"></textarea>
+      </div>
+      <div class="form-outline mb-4">
+        <div class="row">
+          <div class="col-md-3">
+            <label for="upload-photo" class="btn btn-success" id="label">Choose image...</label>
+            <input type="file" id="upload-photo" name="image">
+          </div>
+          <div class="col-md-4">
+            <button type="submit" name="commit" class="btn btn-success">Post</button>
+          </div>
+        </div>
+      </div>
+
+      <style>
+          label {
+              cursor: pointer;
+          }
+
+          #upload-photo {
+              opacity: 0;
+              position: absolute;
+              z-index: -1;
+          }
+      </style>
+    </form>
+  </div>
+  <% end %>
+  <div class="row mt-5"></div>
+  <div class="container">
+    <div class="row w-70">
+      <% @posts.each do |post| %>
+        <div class="container p-5 mb-5" style="background-color: white; border-radius: 2rem; box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%)">
+          <div class="row">
+            <div class="col-md-10 mb-2">
+              <div class="row">
+                <div class="col-md-10">
+                  <h3 style="font-weight: bold;"><%= post.user.username unless post.user.username.blank? %></h3>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-10">
+                  <%= post.created_at.strftime('%d - Tháng %m, %Y lúc %I : %M') %>
+                </div>
+              </div>
+            </div>
+            <% if current_user.id == @user.id %>
+            <div class="col-md-2">
+              <div class="row">
+                <div class="col-md-6">
+                  <%= link_to "delete", post_path(post), data: {
+                    turbo_method: :delete,
+                    turbo_confirm: "Are you sure?"
+                  }, class: "btn btn-danger" %>
+                </div>
+                <div class="col-md-6">
+                  <button id="btn">edit</button>
+                </div>
+
+              </div>
+            </div>
+              <% end %>
+          </div>
+          <div class="row mb-5" id="content-input">
+            <a id="content">
+              <%= post.content %>
+            </a>
+          </div>
+          <div class="row">
+            <%= image_tag post.image unless post.image.blank? %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+</div>
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function () {
+      $("#btn").on('click', function () {
+          let content = document.getElementById('content').innerHTML
+          document.getElementById('content-input').innerHTML = '<textarea name="" id="text" cols="30" rows="10">'+ content +'</textarea>'
+      })
+  })
+</script>
