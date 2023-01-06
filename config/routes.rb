@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
+  devise_for :users
   root "posts#index"
-  resources :users
   resources :posts
-  get "login", to: "users#login"
-  get "logout", to: "users#logout"
-  post "login", to: "users#accept"
+  as :user do
+    get 'logout', to: "devise/sessions#destroy"
+  end
+
 end

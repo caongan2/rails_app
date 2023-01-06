@@ -1,25 +1,14 @@
 class ApplicationController < ActionController::Base
-  before_action :authorized
-  # before_action :isAdminUser
-  helper_method :current_user
-  helper_method :is_login?
-  # helper_method :is_admin?
-  def current_user
-    User.find_by(id: session[:user_id])
-  end
-  def is_login?
-    !current_user.nil?
-  end
+  protect_from_forgery with: :exception
 
-  # def is_admin?
-  #   User.find_by(id: session[:user_id]).is_admin == true
-  # end
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
-  def authorized
-    redirect_to '/login' unless is_login?
+  protected
+
+  def configure_permitted_parameters
+    attributes = [:name, :surname,:username, :email, :avatar]
+    devise_parameter_sanitizer.permit(:sign_up, keys: attributes)
+    devise_parameter_sanitizer.permit(:sign_in, keys: attributes)
+    devise_parameter_sanitizer.permit(:account_update, keys: attributes)
   end
-
-  # def isAdminUser
-  #   redirect_to '/posts' unless is_admin?
-  # end
 end

@@ -43,8 +43,9 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 gem "bootsnap", require: false
 
 gem "mysql2"
-gem "bcrypt", "~> 3.1.7"
-# gem "devise"
+# gem "bcrypt", "~> 3.1.7"
+gem "devise", "~> 4.1"
+gem "image_processing", ">= 1.2"
 gem "image_processing", ">= 1.2"
 # Use Sass to process CSS
 # gem "sassc-rails"
