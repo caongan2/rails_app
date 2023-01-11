@@ -26,11 +26,9 @@
           <li class="nav-item">
             <%= link_to 'Home', root_path, class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %>
           </li>
-          <% if current_user && current_user.is_admin == 1 %>
           <li class="nav-item">
             <%= link_to 'All users', users_path, class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %>
           </li>
-            <% end %>
         </ul>
         <form class="d-flex">
           <div class="row">
@@ -51,27 +49,16 @@
                     Auth
                   </a>
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li><%= link_to current_user.username, profile_path(current_user.id), class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %></li>
+                    <li><%= link_to format_name(current_user), profile_path(current_user.id), class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %></li>
                     <li><%= link_to 'Edit profile', edit_user_registration_path, class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %></li>
+                    <li><%= link_to 'followes_by', followes_path, class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %></li>
+                    <li><%= link_to 'followes_to', follow_to_path, class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %></li>
                     <li>
                       <%= link_to "logout", destroy_user_session_path, data: { turbo_method: :delete}, class: "nav-link", "aria-disabled" => "true", tabindex: "-1" %>
                     </li>
                   </ul>
                 </div>
               </div>
-              <script type="text/javascript" charset="utf-8">
-                $(document).ready(function () {
-                    let flag = true
-                  $('#dropdownMenuLink').on('click', function () {
-                      flag = !flag
-                      if (flag === true) {
-                          $('.dropdown-menu').css('display', 'block')
-                      } else {
-                          $('.dropdown-menu').css('display', 'none')
-                      }
-                  })
-                })
-              </script>
               <% end %>
           </div>
         </form>

@@ -1,6 +1,6 @@
 <div class="container p-5 mt-5" style="background-color: #f0f2f5; width: 55%">
   <form action="/posts" accept-charset="UTF-8" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="authenticity_token" value="...">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
     <input type="text" name="post[user_id]" value="<%= current_user.id unless current_user.blank? %>>" hidden="hidden">
     <div class="form-outline mb-4">
       <textarea class="form-control" id="form4Example3" name="post[content]" placeholder="Content" rows="4"></textarea>
@@ -8,21 +8,21 @@
     <div class="form-outline mb-4">
       <label for="upload-photo" id="label">Choose image...</label>
       <input type="file" id="upload-photo" name="image">
+      <style>
+          label {
+              cursor: pointer;
+          }
+
+          #upload-photo {
+              opacity: 0;
+              position: absolute;
+              z-index: -1;
+          }
+      </style>
     </div>
     <div class="form-outline mb-4">
       <button type="submit" name="commit" class="btn btn-success">Post</button>
     </div>
-    <style>
-        label {
-            cursor: pointer;
-        }
-
-        #upload-photo {
-            opacity: 0;
-            position: absolute;
-            z-index: -1;
-        }
-    </style>
   </form>
 
   <div class="row w-70">

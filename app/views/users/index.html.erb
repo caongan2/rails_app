@@ -1,11 +1,23 @@
 <div class="container">
     <ul class="list-group text-center">
-      <% @users.each do |user| %>
+    <% @users.each do |user| %>
       <li class="list-group-item">
-        <a href="">
-          <%= format_name(user) %>
-        </a>
+        <div class="row">
+          <div class="col-md-10">
+            <%= link_to format_name(user), profile_path(user.id) %>
+          </div>
+          <div class="col-md-2">
+            <div class="row">
+              <div class="col-md-6">
+                <a class="btn btn-primary">follow</a>
+              </div>
+              <div class="col-md-6">
+                <a class="btn btn-danger">delete</a>
+              </div>
+            </div>
+          </div>
+        </div>
       </li>
-        <% end %>
+    <% end %>
     </ul>
 </div>

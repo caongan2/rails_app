@@ -1,0 +1,11 @@
+<div class="container">
+  <ul class="list-group text-center">
+    <% @followes.each do |f| %>
+      <li class="list-group-item">
+        <a href="">
+          <%= f.user_username(f.user_id) %>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+</div>

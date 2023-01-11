@@ -1,6 +1,31 @@
 <div class="container w-50">
-  <div class="row">
-    <img src="https://nld.mediacdn.vn/thumb_w/684/2019/4/3/avengers-endgame-poster-og-social-crop-15542720808371479664269.jpg" alt="">
+  <div class="container p-5 mb-5" style="background-color: white; border-radius: 2rem; box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%)">
+    <div class="row">
+      <% if !@user.avatar.blank? %>
+        <%= image_tag @user.avatar unless @user.avatar.blank? %>
+      <% else %>
+        <img style="width: 100%" src="https://nld.mediacdn.vn/thumb_w/684/2019/4/3/avengers-endgame-poster-og-social-crop-15542720808371479664269.jpg" alt="">
+      <% end %>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-10">
+        <h2 style="font-weight: bold;"><%= format_name(@user) %></h2>
+      </div>
+      <% if current_user.id != @user.id %>
+      <div class="col-md-2">
+        <button class="btn btn-primary btn-follow" user_id="<%= @user.id %>" followed="<%= @followed %>" follower="<%= current_user.id %>" id="btn-follow" type='button'>
+        <% if @followed == 0 %>
+          Follow
+        <% else %>
+          unfollow
+        <% end %>
+        </button>
+      </div>
+      <% end %>
+    </div>
+    <div class="row mt-1">
+      <div><a id="fl-count"><%= @followes.to_s + ' ' %> </a><span>follower</span></div>
+    </div>
   </div>
   <% if current_user.id == @user.id %>
   <div class="row mt-5">
@@ -58,23 +83,60 @@
             <div class="col-md-2">
               <div class="row">
                 <div class="col-md-6">
-                  <%= link_to "delete", post_path(post), data: {
-                    turbo_method: :delete,
-                    turbo_confirm: "Are you sure?"
-                  }, class: "btn btn-danger" %>
-                </div>
-                <div class="col-md-6">
-                  <button id="btn">edit</button>
+                  <div class="dropdown">
+                    <a class="btn-dropdown btn btn-secondary dropdown-toggle" data-id="<%= post.id %>" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                      action
+                    </a>
+                    <ul class="dropdown-menu" id="post-<%= post.id %>" aria-labelledby="dropdownMenuLink">
+                      <li>
+                        <%= link_to "delete", post_path(post), data: {
+                          turbo_method: :delete,
+                          turbo_confirm: "Are you sure?"
+                        }, class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %>
+                      </li >
+                      <li>
+                        <a id="btn" class="nav-link btn-edit" data-id="<%= post.id %>" aria-disabled="true" tabindex="-1">Edit</a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
 
               </div>
             </div>
               <% end %>
           </div>
-          <div class="row mb-5" id="content-input">
-            <a id="content">
-              <%= post.content %>
-            </a>
+          <div class="row mb-5">
+            <%= form_for post do |f| %>
+<!--            <form action="<%#= post_update_path(post.id) %>" accept-charset="UTF-8" method="post" enctype="multipart/form-data">-->
+<!--              <input type="hidden" name="authenticity_token" value="<%#= form_authenticity_token %>">-->
+              <%# f.hidden_field :user_id, value: post.user_id %>
+<!--              <input type="text" name="post[user_id]" value="<%#= post.user_id %>" hidden="hidden">-->
+              <div id="content-input-<%= post.id %>">
+                <a id="content-<%= post.id %>">
+                  <%= post.content %>
+                </a>
+              </div>
+              <div class="form-outline mb-4 mt-4" id="update-image-<%= post.id %>" style="display: none">
+<!--                <input type="file" name="image">-->
+                <%= f.label :image, "Choose Image..." %>
+                <%= f.file_field :image, class: "upload-photo" %>
+<!--                <label for="upload-photo" id="label">Choose image...</label>-->
+<!--                <input type="file" id="upload-photo" name="image">-->
+                <style>
+                    label {
+                        cursor: pointer;
+                    }
+
+                    .upload-photo {
+                        opacity: 0;
+                        position: absolute;
+                        z-index: -1;
+                    }
+                </style>
+              </div>
+              <button class="btn btn-primary" type="submit" id="update-post-<%= post.id %>" style="display: none" name="commit">update</button>
+            </form>
+              <% end %>
           </div>
           <div class="row">
             <%= image_tag post.image unless post.image.blank? %>
@@ -87,9 +149,58 @@
 </div>
 <script type="text/javascript" charset="utf-8">
   $(document).ready(function () {
-      $("#btn").on('click', function () {
-          let content = document.getElementById('content').innerHTML
-          document.getElementById('content-input').innerHTML = '<textarea name="" id="text" cols="30" rows="10">'+ content +'</textarea>'
+      let flag = false
+
+      let followed = `<%= @followed %>`
+      let fl_count = $("#fl-count").html()
+      fl_count = Number(fl_count)
+      if (followed == 1) {
+          flag = true
+      }
+      console.log(flag)
+      $('#btn-follow').on('click', function () {
+          flag = !flag
+          console.log(fl_count)
+          if (flag == true) {
+              fl_count = fl_count + 1
+              $("#btn-follow").html('unfollow')
+              $("#fl-count").html(fl_count + ' ')
+          } else {
+              fl_count = fl_count - 1
+              $("#btn-follow").html('follow')
+              $("#fl-count").html(fl_count + ' ')
+          }
+          let user_id = $(this).attr('user_id')
+          let follower = $(this).attr('follower')
+          let url = location.origin + `<%= follow_path %>`
+          console.log(user_id, follower, url, followed)
+          $.ajax({
+              type: "POST",
+              dataType: "JSON",
+              url: url,
+              data: {
+                  user_id: user_id,
+                  follower: follower,
+                  authenticity_token: `<%= form_authenticity_token %>`
+              },
+              headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              success: function (e) {
+                  console.log(e);
+              },
+              error: function (e) {
+                  console.log(e)
+              }
+          })
+      })
+
+      $(".btn-edit").on('click', function () {
+          let id = $(this).attr('data-id')
+          let content = document.getElementById('content-' + id).innerHTML
+          $("#update-post-" + id).css('display', 'block')
+          $("#update-image-" + id).css('display', 'block')
+          document.getElementById('content-input-' + id).innerHTML = '<div class="form-outline mb-4"> <textarea class="form-control" id="form4Example3" name="post[content]" placeholder="Content" rows="4">'+ content +'</textarea> </div>'
       })
   })
 </script>

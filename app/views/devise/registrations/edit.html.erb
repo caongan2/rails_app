@@ -15,6 +15,11 @@
         <%= f.phone_field :phone_number, autofocus: true, autocomplete: "phone", class: "form-control" %>
       </div>
 
+      <div class="field">
+        <%= f.label :gender %><br />
+        <%= select(:user, :gender, [['Male', 1], ['Female', 0]], class: "form-control" ) %>
+      </div>
+
       <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
         <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
       <% end %>
