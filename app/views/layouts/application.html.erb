@@ -59,6 +59,19 @@
                   </ul>
                 </div>
               </div>
+              <script type="text/javascript" charset="utf-8">
+                  $(function () {
+                      let flag = false
+                      $('#dropdownMenuLink').on('click', function () {
+                          flag = !flag
+                          if (flag === true) {
+                              $('.dropdown-menu').css('display', 'block')
+                          } else {
+                              $('.dropdown-menu').css('display', 'none')
+                          }
+                      })
+                  })
+              </script>
               <% end %>
           </div>
         </form>

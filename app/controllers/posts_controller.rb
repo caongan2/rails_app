@@ -4,8 +4,16 @@ class PostsController < ApplicationController
   end
 
   def destroy
-    Post.find(params[:id]).destroy
-    redirect_back(fallback_location: "")
+    @post = Post.find(params[:id])
+    if @post.destroy
+      render json: {
+        message: "destroy success"
+      }
+    else
+      render json: {
+        message: "destroy failed"
+      }
+    end
   end
 
   def show

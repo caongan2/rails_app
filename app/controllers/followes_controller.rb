@@ -12,12 +12,12 @@ class FollowesController < ApplicationController
       if is_fl == 1
         @follow.update(followed: 0)
         render json: {
-          message: "ok"
+          message: "unfollow"
         }
       else
         @follow.update(followed: 1)
         render json: {
-          message: "ok"
+          message: "followed"
         }
       end
     else

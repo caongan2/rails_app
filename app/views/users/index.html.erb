@@ -9,10 +9,19 @@
           <div class="col-md-2">
             <div class="row">
               <div class="col-md-6">
-                <a class="btn btn-primary">follow</a>
+                <% unless is_followed?(user) %>
+                  <% unless current_user.id == user.id %>
+                    <button class="btn btn-primary btn-follow" id="btn-follow-<%= user.id %>" user_id="<%= user.id %>" follower="<%= current_user.id %>">follow</button>
+                  <% end %>
+                <% end %>
               </div>
               <div class="col-md-6">
-                <a class="btn btn-danger">delete</a>
+                <% if current_user.is_admin == 1 %>
+                  <%= link_to "delete", user_destroy_path(user.id), data: {
+                    turbo_method: :delete,
+                    turbo_confirm: "Are you sure?"
+                  }, class: "btn btn-danger" %>
+                <% end %>
               </div>
             </div>
           </div>
@@ -21,3 +30,34 @@
     <% end %>
     </ul>
 </div>
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function () {
+
+      $(".btn-follow").on('click', function () {
+          let user_id = $(this).attr('user_id')
+          let follower = $(this).attr('follower')
+          console.log(user_id, follower)
+          let url = location.origin + `<%= follow_path %>`
+          $.ajax({
+              type: "POST",
+              dataType: "JSON",
+              url: url,
+              data: {
+                  user_id: user_id,
+                  follower: follower,
+                  authenticity_token: `<%= form_authenticity_token %>`
+              },
+              headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              success: function (e) {
+                  console.log(e);
+                  $("#btn-follow-" + user_id).remove()
+              },
+              error: function (e) {
+                  console.log(e)
+              }
+          })
+      })
+  })
+</script>

@@ -11,6 +11,13 @@ class UsersController < ApplicationController
     @posts = Post.where(user_id: @user.id).order('id DESC')
   end
 
+  def destroy
+    @user = User.find(params[:id])
+    if @user.destroy
+      redirect_back(fallback_location: "")
+    end
+  end
+
   def follow_to
     @user = current_user
     @followes = Followe.where(follower: @user.id)

@@ -65,7 +65,7 @@
   <div class="container">
     <div class="row w-70">
       <% @posts.each do |post| %>
-        <div class="container p-5 mb-5" style="background-color: white; border-radius: 2rem; box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%)">
+        <div class="container p-5 mb-5" id="post-<%= post.id %>" style="background-color: white; border-radius: 2rem; box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%)">
           <div class="row">
             <div class="col-md-10 mb-2">
               <div class="row">
@@ -87,15 +87,12 @@
                     <a class="btn-dropdown btn btn-secondary dropdown-toggle" data-id="<%= post.id %>" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                       action
                     </a>
-                    <ul class="dropdown-menu" id="post-<%= post.id %>" aria-labelledby="dropdownMenuLink">
+                    <ul class="dropdown-menu" id="dropdown-<%= post.id %>" aria-labelledby="dropdownMenuLink">
                       <li>
-                        <%= link_to "delete", post_path(post), data: {
-                          turbo_method: :delete,
-                          turbo_confirm: "Are you sure?"
-                        }, class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %>
+                        <a class="nav-link btn-delete" data-id="<%= post.id %>" aria-disabled="true" tabindex="-1">Delete</a>
                       </li >
                       <li>
-                        <a id="btn" class="nav-link btn-edit" data-id="<%= post.id %>" aria-disabled="true" tabindex="-1">Edit</a>
+                        <a class="nav-link btn-edit" data-id="<%= post.id %>" aria-disabled="true" tabindex="-1">Edit</a>
                       </li>
                     </ul>
                   </div>
@@ -157,10 +154,8 @@
       if (followed == 1) {
           flag = true
       }
-      console.log(flag)
       $('#btn-follow').on('click', function () {
           flag = !flag
-          console.log(fl_count)
           if (flag == true) {
               fl_count = fl_count + 1
               $("#btn-follow").html('unfollow')
@@ -173,7 +168,6 @@
           let user_id = $(this).attr('user_id')
           let follower = $(this).attr('follower')
           let url = location.origin + `<%= follow_path %>`
-          console.log(user_id, follower, url, followed)
           $.ajax({
               type: "POST",
               dataType: "JSON",
@@ -193,6 +187,37 @@
                   console.log(e)
               }
           })
+      })
+
+      $(".btn-delete").on('click', function () {
+          let id = $(this).attr('data-id')
+          let url = `<%= post_delete_path(':id') %>`
+          url = url.replace(':id', id)
+          $.ajax({
+              type: "DELETE",
+              dataType: "JSON",
+              url: url,
+              headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              success: function (e) {
+                  $("#post-" + id).remove()
+                  console.log(e)
+              },
+              error: function (e) {
+                  console.log(e);
+              }
+          })
+      })
+
+      $(".btn-dropdown").on('click', function () {
+          flag = !flag
+          let id = $(this).attr('data-id')
+          if (flag == true) {
+              $("#dropdown-" + id).css('display', "block")
+          } else {
+              $("#dropdown-" + id).css('display', "none")
+          }
       })
 
       $(".btn-edit").on('click', function () {
