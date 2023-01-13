@@ -14,6 +14,11 @@
       <%= f.text_field :username, class: "form-control" %>
     </div>
 
+    <div class="field">
+      <%= f.label :gender %><br />
+      <%= select(:user, :gender, [['Male', 1], ['Female', 0]]) %>
+    </div>
+
     <div class="form-group">
       <%= f.label :password %>
       <% if @minimum_password_length %>
@@ -29,7 +34,6 @@
     <div class="form-outline mb-4">
       <label for="upload-photo" id="label">Choose image...</label>
       <%= f.file_field :avatar, id: "upload-photo" %>
-<!--      <input type="file" id="upload-photo" name="avatar">-->
     </div>
     <style>
         label {
@@ -50,3 +54,8 @@
   <%= render "devise/shared/links" %>
 
 </div>
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function () {
+      $("#user_gender").attr('class',"form-control")
+  })
+</script>

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'comments/index'
   get 'room/index'
   devise_for :users
   root "posts#index"

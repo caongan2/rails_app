@@ -1,8 +1,8 @@
 <div class="container w-50">
   <div class="container p-5 mb-5" style="background-color: white; border-radius: 2rem; box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%)">
     <div class="row">
-      <% if !@user.avatar.blank? %>
-        <%= image_tag @user.avatar unless @user.avatar.blank? %>
+      <% if !@user.avatar.url.blank? %>
+        <%= image_tag @user.avatar.url %>
       <% else %>
         <img style="width: 100%" src="https://nld.mediacdn.vn/thumb_w/684/2019/4/3/avengers-endgame-poster-og-social-crop-15542720808371479664269.jpg" alt="">
       <% end %>
@@ -115,8 +115,8 @@
               </div>
               <div class="form-outline mb-4 mt-4" id="update-image-<%= post.id %>" style="display: none">
 <!--                <input type="file" name="image">-->
-                <%= f.label :image, "Choose Image..." %>
-                <%= f.file_field :image, class: "upload-photo" %>
+                <%= f.label :picture, "Choose Image..." %>
+                <%= f.file_field :picture, class: "upload-photo" %>
 <!--                <label for="upload-photo" id="label">Choose image...</label>-->
 <!--                <input type="file" id="upload-photo" name="image">-->
                 <style>
@@ -136,7 +136,7 @@
               <% end %>
           </div>
           <div class="row">
-            <%= image_tag post.image unless post.image.blank? %>
+            <%= image_tag post.picture.url unless post.picture.url.blank? %>
           </div>
         </div>
       <% end %>

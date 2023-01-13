@@ -44,6 +44,6 @@ class PostsController < ApplicationController
   end
 
   def data_update
-    params.require('post').permit(:content, :image)
+    params.require('post').permit(:content, :picture)
   end
 end

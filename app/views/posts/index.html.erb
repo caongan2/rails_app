@@ -8,7 +8,7 @@
     <div class="row">
       <div class="form-outline col-md-3 mb-4">
         <label for="upload-photo" class="btn btn-secondary" id="label">Choose image...</label>
-        <input type="file" id="upload-photo" name="picture">
+        <input type="file" id="upload-photo" name="post[picture]">
         <style>
             label {
                 cursor: pointer;
@@ -59,7 +59,7 @@
           </a>
         </div>
         <div class="row">
-          <%= image_tag post.picture unless post.picture.blank? %>
+          <%= image_tag post.picture.url unless post.picture.blank? %>
         </div>
       </div>
     <% end %>
@@ -71,7 +71,7 @@
           let id = $(this).attr('data-id')
           let url = `<%= post_delete_path(':id') %>`
           url = url.replace(':id', id)
-          if (confirm('sdsdsds')) {
+          if (confirm('Delete post???')) {
               $.ajax({
                   type: "DELETE",
                   dataType: "JSON",
