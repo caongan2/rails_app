@@ -1,0 +1,2 @@
+class PlanIssue < ApplicationRecord
+end

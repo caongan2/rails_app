@@ -51,6 +51,8 @@
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li><%= link_to format_name(current_user), profile_path(current_user.id), class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %></li>
                     <li><%= link_to 'Edit profile', edit_user_registration_path, class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %></li>
+                    <li><%= link_to 'Add plan issue', spending_plan_new_path, class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %></li>
+                    <li><%= link_to 'Spending plan', plan_search_path, :sort => "price_lowest", class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %></li>
                     <li><%= link_to 'followes_by', follow_by_path, class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %></li>
                     <li><%= link_to 'followes_to', follow_to_path, class: "nav-link", "aria-disabled" => "true", tabindex: "-1"  %></li>
                     <li>

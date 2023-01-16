@@ -1,0 +1,130 @@
+<div class="container">
+  <form accept-charset="UTF-8" method="get">
+    <div class="row">
+      <div class="col-md-2">
+        <select name="month" id="month" class="form-control">
+          <option value="<%= @month %>" selected="selected"><%= @month %></option>
+          <% for i in 1..12 %>
+            <option value="<%= i %>"><%= i %></option>
+          <% end %>>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <select name="year" id="month" class="form-control">
+          <option value="<%= @year %>" selected="selected"><%= @year %></option>
+          <% for i in 2020..2030 %>
+            <option value="<%= i %>"><%= i %></option>
+          <% end %>>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-success" type="submit">Fetch</button>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="mb-5"></div>
+<div class="container">
+  <% if @spending_plan_year %>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Month</th>
+      <th scope="col">Year</th>
+      <th scope="col">Max </th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @spending_plan_year.each_with_index do |item, index| %>
+      <tr class="spending-plan-<%= index + 1 %>" month="<%= item.month %>" year="<%= item.year %>">
+        <th scope="row"><%= index + 1 %></th>
+        <td><%= item.month %></td>
+        <td><%= item.year %></td>
+        <td><%= item.max %></td>
+      </tr>
+    <% end %>
+    <tr >
+      <td colspan="3"></td>
+      <td>Total: <%= @sum_expense.to_s + " $" %></td>
+    </tr>
+    </tbody>
+  </table>
+  <% elsif @spending_plans %>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Year</th>
+        <th scope="col">Max </th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @spending_plans.each_with_index do |item, index| %>
+        <tr class="spending-plans-<%= index + 1 %>" year="<%= item.year %>">
+          <th scope="row"><%= index + 1 %></th>
+          <td><%= item.year %></td>
+          <td><%= item.max %></td>
+        </tr>
+      <% end %>
+      <tr >
+        <td colspan="2"></td>
+        <td>Total: <%= @sum_expense.to_s + " $" %></td>
+      </tr>
+      </tbody>
+    </table>
+  <% else %>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <td colspan="4"></td>
+        <td>
+          Max: <% if@spending_plan %> <%= @spending_plan.max.to_s + " $" %> <% end %>
+        </td>
+      </tr>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Month</th>
+        <th scope="col">Year</th>
+        <th scope="col">Plan issue</th>
+        <th scope="col">Expense</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @plan_issue.each_with_index do |item, index| %>
+        <tr>
+          <th scope="row"><%= index + 1 %></th>
+          <td><%= @spending_plan.month %></td>
+          <td><%= @spending_plan.year %></td>
+          <td><%= item.issue %></td>
+          <td><%= item.expense %></td>
+        </tr>
+      <% end %>
+      <tr >
+        <td colspan="4"></td>
+        <td>Total: <%= @sum_expense.to_s + " $" %></td>
+      </tr>
+      </tbody>
+    </table>
+  <% end %>
+</div>
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function () {
+      `<% if @spending_plan_year %>`
+      for (let i = 1; i <= `<%= @spending_plan_year.count %>`; i++ ) {
+          $(".spending-plan-" + i).on('click', function () {
+              let month = $(this).attr('month')
+              let year = $(this).attr('year')
+              let url = location.origin + `<%= plan_search_path %>` + '?month=' + month + '&year=' + year
+              window.location.href = url
+          })
+          $(".spending-plan-" + i).on('mouseover', function () {
+              $(".spending-plan-" + i).css('background', '#b8daff')
+          })
+          $(".spending-plan-" + i).mouseout(function() {
+              $(".spending-plan-" + i).css('background', '')
+          })
+      }
+      `<% end %>`
+  })
+</script>

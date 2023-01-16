@@ -1,0 +1,43 @@
+<div class="container w-50">
+  <h3>Spending plan</h3>
+    <%= form_for @spending_plan do |form| %>
+        <div class="row mb-5">
+          <input type="hidden" name="item[user_id]" value="<%= current_user.id %>">
+          <div class="col-md-4">
+            <label for="month">month: </label>
+            <select name="item[month]" class="form-control" id="month">
+              <option value="<%= Date.current.month %>" selected="selected"><%= Date.current.month %></option>
+              <% for i in 1..12 %>
+                <option value="<%= i %>"><%= i %></option>
+              <% end %>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="year">year: </label>
+            <select name="item[year]" id="year" class="form-control">
+              <option value="<%= Date.current.year %>" selected="selected"><%= Date.current.year %></option>
+              <% for i in Date.current.year..(Date.current.year + 10) %>
+                <option value="<%= i %>"><%= i %></option>
+              <% end %>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="max">max: </label>
+            <input type="number" id="max" name="item[max]" class="form-control" min="0">
+          </div>
+        </div>
+    <div class="row mb-5">
+      <div class="col-md-6">
+        <label for="fee_name">Name</label>
+        <input type="text" class="form-control" name="fee[issue]" id="fee_name">
+      </div>
+      <div class="col-md-6">
+        <label for="fee">fee</label>
+        <input type="number" class="form-control" name="fee[expense]" id="fee">
+      </div>
+    </div>
+    <div class="row ">
+      <%= form.submit class: "btn btn-primary" %>
+    </div>
+    <% end %>
+</div>
