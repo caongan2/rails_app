@@ -4,5 +4,5 @@ class User < ApplicationRecord
   mount_uploader :avatar, PictureUploader
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
-  has_many :followes, dependent: :destroy
+  has_many :followers, dependent: :destroy
 end

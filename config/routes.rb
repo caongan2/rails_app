@@ -4,10 +4,10 @@ Rails.application.routes.draw do
   devise_for :users
   root "posts#index"
   resources :posts
-  resources :followes
+  resources :followers
   resources :room
-  as :followes do
-    post 'followes_by', to: "followes#follow", as: :follow
+  as :followers do
+    post 'followes_by', to: "followes#follow", as: :follow_by
   end
   as :post do
     post "posts/:id", to: "posts#update", as: :post_update

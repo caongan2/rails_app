@@ -1,12 +1,12 @@
-class FollowesController < ApplicationController
+class FollowersController < ApplicationController
 
   def index
     @user = current_user
-    @followes = Followe.where(user_id: @user.id)
+    @followers = Follower.where(user_id: @user.id)
   end
 
   def follow
-    @follow = Followe.where(user_id: params[:user_id], follower: current_user.id).first
+    @follow = Follower.where(user_id: params[:user_id], follower: current_user.id).first
     if @follow
       is_fl = @follow.followed
       if is_fl == 1
@@ -21,7 +21,7 @@ class FollowesController < ApplicationController
         }
       end
     else
-      @follow = Followe.new(data)
+      @follow = Follower.new(data)
       if @follow.save
         render json: {
           message: "ok"
