@@ -31,8 +31,8 @@ class PostsController < ApplicationController
   def create
     @post = Post.new(data)
     @user = current_user
-    UserMailer.with(user: @user).welcome_email.deliver_now
-    @post.image.attach(params[:image])
+    # UserMailer.with(user: @user).welcome_email.deliver_now
+    # @post.image.attach(params[:image])
     if @post.save
       redirect_back(fallback_location: "")
     end
@@ -40,10 +40,10 @@ class PostsController < ApplicationController
 
   private
   def data
-    params.require('post').permit(:content, :user_id)
+    params.require('post').permit(:content, :user_id, :picture)
   end
 
   def data_update
-    params.require('post').permit(:content, :image)
+    params.require('post').permit(:content, :picture)
   end
 end

@@ -1,10 +1,8 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-  has_one_attached :avatar
+  mount_uploader :avatar, PictureUploader
   has_many :posts, dependent: :destroy
-  has_many :followes, dependent: :destroy
-  has_many :messages
-  has_many :rooms
-
+  has_many :comments, dependent: :destroy
+  has_many :followers, dependent: :destroy
 end
