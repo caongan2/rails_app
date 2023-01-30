@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :followers
   resources :spending_plan
   get "spending_plan_get", to: "spending_plan#search", as: :plan_search
+  post "spending_plan_post", to: "spending_plan#create", as: :spending_plan_post
   as :spending_plan do
     post "spending_plan", to: "spending_plan#create", as: :spending_plans
   end

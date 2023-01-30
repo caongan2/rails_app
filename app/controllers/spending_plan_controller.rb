@@ -32,20 +32,31 @@ class SpendingPlanController < ApplicationController
     @spending_plan = SpendingPlan.where(spending_plan_conditional).first
 
     if @spending_plan
-      plan_issue_create(@spending_plan.id)
-      render json: {
-        message: "exist"
-      }
+      @max_value = (total(@spending_plan.id) + params[:fee][:expense].to_i) > @spending_plan.max
+      if @max_value
+        render json: {
+          status: 0
+        }
+      else
+        plan_issue_create(@spending_plan.id)
+        render json: {
+          status: 1
+        }
+      end
     else
       @spending_plan = SpendingPlan.new(spending_plan_data)
       if @spending_plan.save
         plan_issue_create(@spending_plan.id)
       end
       render json: {
-        message: "not exist"
+        message: "Add spending plan successfully"
       }
     end
     # redirect_back(fallback_location: "")
+  end
+
+  def total (id)
+    PlanIssue.where(plan_id: id).sum(:expense)
   end
 
   def plan_issue_create(id)

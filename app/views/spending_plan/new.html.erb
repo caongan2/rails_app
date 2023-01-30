@@ -1,8 +1,8 @@
 <div class="container w-50">
   <h3>Spending plan</h3>
-    <%= form_for @spending_plan do |form| %>
+    <%= form_for @spending_plan, remote: true do |form| %>
         <div class="row mb-5">
-          <input type="hidden" name="item[user_id]" value="<%= current_user.id %>">
+          <input type="hidden" name="item[user_id]" id="user_id" value="<%= current_user.id %>">
           <div class="col-md-4">
             <label for="month">month: </label>
             <select name="item[month]" class="form-control" id="month">
@@ -33,11 +33,75 @@
       </div>
       <div class="col-md-6">
         <label for="fee">fee</label>
-        <input type="number" class="form-control" name="fee[expense]" id="fee">
+        <input type="number" class="form-control" name="fee[expense]" id="expense">
       </div>
     </div>
-    <div class="row ">
-      <%= form.submit class: "btn btn-primary" %>
-    </div>
     <% end %>
+  <div class="row ">
+    <button class="btn btn-primary btn-submit">Submit</button>
+  </div>
 </div>
+<script type="text/javascript" charset="utf-8">
+
+  $(document).ready(function () {
+      var reload = false
+      $(".btn-submit").on('click', function () {
+          let user_id = $("#user_id").val()
+          let month = $("#month").val()
+          let year = $("#year").val()
+          let max = $("#max").val()
+          let issue = $("#fee_name").val()
+          let expense = $("#expense").val()
+          let url = location.origin + `<%= spending_plan_post_path %>`
+          $.ajax({
+              type: "POST",
+              dataType: "JSON",
+              url: url,
+              data: {
+                  item: {
+                      user_id: user_id,
+                      month: month,
+                      year: year,
+                      max: max
+                  },
+                  fee: {
+                      issue: issue,
+                      expense: expense
+                  },
+                  authenticity_token: `<%= form_authenticity_token %>`
+              },
+              headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              success: function (e) {
+                  if (max) {
+                      alert("Spending limit has been setup, new value will not update")
+                      alertConfirm(e.status)
+                  } else {
+                      alertConfirm(e.status)
+                  }
+                  if (reload == true) {
+                      location.reload()
+                  }
+              },
+              error: function (e) {
+                  console.log(e)
+              }
+          })
+      })
+
+      function alertConfirm(status) {
+          if (status) {
+              if (status == 0) {
+                  reload = false
+                  alert("Please change your max value for spending plan")
+              } else {
+                  reload = true
+                  alert("Add spending plan successfully")
+              }
+          } else {
+              location.reload()
+          }
+      }
+  })
+</script>
