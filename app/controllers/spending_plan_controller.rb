@@ -3,10 +3,15 @@ class SpendingPlanController < ApplicationController
     @spending_plan = SpendingPlan.new
   end
 
-  def search
+  def show
+    @plan_issue = PlanIssue.find_by(id: params[:id])
+  end
+
+  def index
     @month = params[:month]
     @year = params[:year]
     @sum_expense = 0
+    @spending_plans_count = 0
     if @month && @year
       if @month != '' && @year != ''
         @spending_plan = SpendingPlan.where(user_id: current_user.id, month: @month, year: @year).first
@@ -16,7 +21,10 @@ class SpendingPlanController < ApplicationController
       end
     else
       @spending_plans = SpendingPlan.select("year, SUM(max) as max").group(:year).where(user_id: current_user.id)
-      @spending_plans.each { |item| @sum_expense += item.max }
+      @spending_plans.each do |item|
+        @sum_expense += item.max
+        @spending_plans_count += 1
+      end
     end
 
     if @spending_plan
@@ -49,7 +57,8 @@ class SpendingPlanController < ApplicationController
         plan_issue_create(@spending_plan.id)
       end
       render json: {
-        message: "Add spending plan successfully"
+        message: "Add spending plan successfully",
+        status: 2
       }
     end
     # redirect_back(fallback_location: "")

@@ -7,13 +7,13 @@ Rails.application.routes.draw do
   resources :posts
   resources :followers
   resources :spending_plan
-  get "spending_plan_get", to: "spending_plan#search", as: :plan_search
+  get "spending_plan", to: "spending_plan#index", as: :plan_search
   post "spending_plan_post", to: "spending_plan#create", as: :spending_plan_post
   as :spending_plan do
     post "spending_plan", to: "spending_plan#create", as: :spending_plans
   end
   as :followers do
-    post 'followes_by', to: "followes#follow", as: :follow
+    post 'followers_by', to: "followers#follow", as: :follow
   end
   as :post do
     post "posts/:id", to: "posts#update", as: :post_update
@@ -24,8 +24,8 @@ Rails.application.routes.draw do
     get "user/:id", to: "users#show", as: :profile
     get "users", to: "users#index", as: :users
     delete "users/:id", to: "users#destroy", as: :user_destroy
-    get 'followes_to', to: "users#follow_to", as: :follow_to
-    get 'followes_by', to: "followers#index", as: :follow_by
+    get 'followers_to', to: "users#follow_to", as: :follow_to
+    get 'followers_by', to: "followers#index", as: :follow_by
   end
 
 end

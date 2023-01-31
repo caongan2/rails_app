@@ -61,7 +61,7 @@
       </thead>
       <tbody>
       <% @spending_plans.each_with_index do |item, index| %>
-        <tr class="spending-plans-<%= index + 1 %>" year="<%= item.year %>">
+        <tr class="spending-plan-<%= index + 1 %> class" year="<%= item.year %>">
           <th scope="row"><%= index + 1 %></th>
           <td><%= item.year %></td>
           <td><%= item.max %></td>
@@ -92,7 +92,7 @@
       </thead>
       <tbody>
       <% @plan_issue.each_with_index do |item, index| %>
-        <tr>
+        <tr class="plan_issue" data-id="<%= item.id %>">
           <th scope="row"><%= index + 1 %></th>
           <td><%= @spending_plan.month %></td>
           <td><%= @spending_plan.year %></td>
@@ -126,5 +126,25 @@
           })
       }
       `<% end %>`
+
+      for (let i = 1; i <= `<%= @spending_plans_count %>`; i++ ) {
+          $(".spending-plan-" + i).on('click', function () {
+              let year = $(this).attr('year')
+              let url = location.origin + `<%= plan_search_path %>` + '?month=' + '&year=' + year
+              window.location.href = url
+          })
+          $(".spending-plan-" + i).on('mouseover', function () {
+              $(".spending-plan-" + i).css('background', '#b8daff')
+          })
+          $(".spending-plan-" + i).mouseout(function() {
+              $(".spending-plan-" + i).css('background', '')
+          })
+      }
+
+      $(".plan_issue").on('click', function () {
+          let id = $(this).attr('data-id')
+          let url = location.origin + `<%= spending_plan_path(':id') %>`
+          window.location.href = url.replace(':id', id)
+      })
   })
 </script>

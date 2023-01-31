@@ -75,7 +75,9 @@
               },
               success: function (e) {
                   if (max) {
-                      alert("Spending limit has been setup, new value will not update")
+                      if (e.status != 2) {
+                          alert("Spending limit has been setup, new value will not update")
+                      }
                       alertConfirm(e.status)
                   } else {
                       alertConfirm(e.status)
@@ -91,16 +93,12 @@
       })
 
       function alertConfirm(status) {
-          if (status) {
-              if (status == 0) {
-                  reload = false
-                  alert("Please change your max value for spending plan")
-              } else {
-                  reload = true
-                  alert("Add spending plan successfully")
-              }
+          if (status == 0) {
+              reload = false
+              alert("Please change your max value for spending plan")
           } else {
-              location.reload()
+              reload = true
+              alert("Add spending plan successfully")
           }
       }
   })
