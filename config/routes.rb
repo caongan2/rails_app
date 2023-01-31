@@ -27,5 +27,5 @@ Rails.application.routes.draw do
     get 'followers_to', to: "users#follow_to", as: :follow_to
     get 'followers_by', to: "followers#index", as: :follow_by
   end
-
+  get "export", to: "pdfs#show", as: :export
 end
