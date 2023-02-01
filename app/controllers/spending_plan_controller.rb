@@ -5,8 +5,19 @@ class SpendingPlanController < ApplicationController
 
   def show
     @plan_issue = PlanIssue.find_by(id: params[:id])
+    @spending_plan = SpendingPlan.find_by(id: @plan_issue.plan_id)
   end
 
+  def export
+    @plan_issue = PlanIssue.find_by(id: params[:id])
+    @spending_plan = SpendingPlan.find_by(id: @plan_issue.plan_id)
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render  :pdf => "#{@plan_issue.issue}_#{@plan_issue.created_at.strftime("%Y-%m-%d_%H-%M")}", :template => 'spending_plan/export',  formats: [:html]
+      end
+    end
+  end
   def index
     @month = params[:month]
     @year = params[:year]
