@@ -6,7 +6,11 @@ Rails.application.routes.draw do
   root "posts#index"
   resources :posts
   resources :followers
-  resources :spending_plan
+  resources :spending_plan do
+    collection do
+      get :export_excel
+    end
+  end
   get "spending_plan", to: "spending_plan#index", as: :plan_search
   post "spending_plan_post", to: "spending_plan#create", as: :spending_plan_post
   as :spending_plan do
@@ -27,5 +31,6 @@ Rails.application.routes.draw do
     get 'followers_to', to: "users#follow_to", as: :follow_to
     get 'followers_by', to: "followers#index", as: :follow_by
   end
-  get "spending_plan/:id/export.pdf", to: "spending_plan#export", as: :export
+  get "spending_plan/:id/export", to: "spending_plan#export", as: :export
+  # get "spending_planszx/export_exel", to: "spending_plan#export_excel", as: :export_excel
 end

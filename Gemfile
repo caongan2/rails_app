@@ -25,7 +25,7 @@ gem "carrierwave"
 
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
-
+gem 'to_xls-rails'
 
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "stimulus-rails"

@@ -18,6 +18,17 @@ class SpendingPlanController < ApplicationController
       end
     end
   end
+
+  def export_excel
+    @plan_issues = PlanIssue.all
+    respond_to do |format|
+      format.html
+      format.xls {
+        filename = "Student-#{Time.now.strftime("%Y%m%d%H%M%S")}.xls"
+        render :xls => filename, :template => 'spending_plan/export_excel',  formats: [:html]
+      }
+    end
+  end
   def index
     @month = params[:month]
     @year = params[:year]
