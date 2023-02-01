@@ -15,7 +15,7 @@
     </div>
     <div class="col-md-4">
       <button type="button" id="modal" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-        Launch demo modal
+        Detail
       </button>
     </div>
     <div class="col-md-4">
@@ -49,7 +49,7 @@
             <p>Expense: </p>
           </div>
           <div class="col-md-6">
-            <p><%= @plan_issue.expense %> / 10000</p>
+            <p><%= @plan_issue.expense %> / <%= @spending_plan.max %> $</p>
           </div>
         </div>
         <div class="row text-center">
@@ -57,13 +57,13 @@
             <p>Created at: </p>
           </div>
           <div class="col-md-6">
-            <p><%= @plan_issue.created_at.strftime("%Y-%m-%d %H:%M:%S") %> / 10000</p>
+            <p><%= @plan_issue.created_at.strftime("%Y-%m-%d %H:%M:%S") %></p>
           </div>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" id="modal-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" id="modal-close" class="btn btn-primary" data-dismiss="modal">Export</button>
+        <a href="<%= export_path(@plan_issue.id) %>" class="btn btn-primary" data-dismiss="modal">Export</a>
       </div>
     </div>
   </div>

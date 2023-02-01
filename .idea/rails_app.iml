@@ -160,6 +160,7 @@
         <option value="test_unit:mailbox" />
         <option value="test_unit:plugin" />
         <option value="uploader" />
+        <option value="wicked_pdf" />
       </list>
     </option>
     <option name="myGenerators">
@@ -199,6 +200,7 @@
         <option value="test_unit:mailbox" />
         <option value="test_unit:plugin" />
         <option value="uploader" />
+        <option value="wicked_pdf" />
       </list>
     </option>
   </component>

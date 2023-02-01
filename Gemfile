@@ -23,6 +23,10 @@ gem "turbo-rails"
 
 gem "carrierwave"
 
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
+
+
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "stimulus-rails"
 
