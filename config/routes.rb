@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
+  root "posts#index"
   get 'spending_plan/new'
   get 'comments/index'
   get 'room/index'
   devise_for :users
-  root "posts#index"
   resources :posts
   resources :followers
   resources :spending_plan
