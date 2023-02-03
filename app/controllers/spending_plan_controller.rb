@@ -1,6 +1,20 @@
 class SpendingPlanController < ApplicationController
   def new
     @spending_plan = SpendingPlan.new
+    @spending_plan.plan_issues.build
+  end
+
+  def edit
+    @plan_issue = PlanIssue.find_by(id: params[:id])
+  end
+
+  def update
+    @plan_issue = PlanIssue.find_by(params[:id])
+    if @plan_issue.update(data_update)
+      redirect_to action: "index"
+    else
+      redirect_back(fallback_location: "")
+    end
   end
 
   def show
@@ -25,7 +39,7 @@ class SpendingPlanController < ApplicationController
       format.html
       format.xls {
         filename = "Student-#{Time.now.strftime("%Y%m%d%H%M%S")}.xls"
-        render :xls => filename, :template => 'spending_plan/export_excel',  formats: [:html]
+        render :xls => filename, :template => 'spending_plan/export_excel',  formats: [:html], layout: false
       }
     end
   end
@@ -59,31 +73,67 @@ class SpendingPlanController < ApplicationController
   end
 
   def create
-    @spending_plan = SpendingPlan.where(spending_plan_conditional).first
-
+    @spending_plan = spending_plan
     if @spending_plan
-      @max_value = (total(@spending_plan.id) + params[:fee][:expense].to_i) > @spending_plan.max
-      if @max_value
-        render json: {
-          status: 0
-        }
-      else
+      if !spending_limit(@spending_plan.id)
         plan_issue_create(@spending_plan.id)
-        render json: {
-          status: 1
-        }
+      else
+        redirect_back(fallback_location: "")
       end
     else
-      @spending_plan = SpendingPlan.new(spending_plan_data)
+      @spending_plan = current_user.spending_plans.new(spending_plan_data)
       if @spending_plan.save
-        plan_issue_create(@spending_plan.id)
+        redirect_to action: "index"
+      else
+        render :new
       end
-      render json: {
-        message: "Add spending plan successfully",
-        status: 2
-      }
     end
+
+    # render json: {
+    #   message: "Add spending plan successfully",
+    #   status: 2
+    # }
+    # @spending_plan = SpendingPlan.where(spending_plan_conditional).first
+    #
+    # if @spending_plan
+    #   @max_value = (total(@spending_plan.id) + params[:fee][:expense].to_i) > @spending_plan.max
+    #   if @max_value
+    #     render json: {
+    #       status: 0
+    #     }
+    #   else
+    #     plan_issue_create(@spending_plan.id)
+    #     render json: {
+    #       status: 1
+    #     }
+    #   end
+    # else
+    #   @spending_plan = SpendingPlan.new(spending_plan_data)
+    #   if @spending_plan.save
+    #     # plan_issue_create(@spending_plan.id)
+    #   end
+    #   render json: {
+    #     message: "Add spending plan successfully",
+    #     status: 2
+    #   }
+    # end
     # redirect_back(fallback_location: "")
+  end
+
+  def spending_plan
+    SpendingPlan.where(spending_plan_conditional).first
+  end
+
+  def spending_limit(id)
+    @limit = SpendingPlan.find_by(id: id).max
+    @current = PlanIssue.where(plan_id: id).sum(:expense)
+    @new = params["spending_plan"]['plan_issues_attributes']["0"]["expense"]
+
+    if @new.to_i + @current.to_i >= @limit.to_i
+      return true
+    end
+
+    return false
   end
 
   def total (id)
@@ -91,20 +141,25 @@ class SpendingPlanController < ApplicationController
   end
 
   def plan_issue_create(id)
-    @plan_issue = PlanIssue.new(plan_issue_data)
-    @plan_issue.attributes = {plan_id: id}
+    @plan_issue = PlanIssue.new
+    @plan_issue.attributes = {plan_id: id, issue: params["spending_plan"]['plan_issues_attributes']["0"]["issue"], expense: params["spending_plan"]['plan_issues_attributes']["0"]["expense"]}
     @plan_issue.save
+    redirect_to action: "index"
   end
 
   def spending_plan_data
-    params.require('item').permit(:user_id, :month, :year, :max)
+    params.require(:spending_plan).permit(:user_id, :month, :year, :max, plan_issues_attributes: [:id, :plan_id, :issue, :expense])
   end
 
   def spending_plan_conditional
-    params.require('item').permit(:user_id, :month, :year)
+    params.require(:spending_plan).permit(:user_id, :month, :year)
   end
 
   def plan_issue_data
-    params.require('fee').permit(:issue, :expense)
+    params.require(:spending_plan).permit(plan_issues_attributes: [:issue, :expense])
+  end
+
+  def data_update
+    params.require(:plan_issue).permit(:issue, :expense)
   end
 end

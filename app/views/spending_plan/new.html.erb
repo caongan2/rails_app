@@ -1,44 +1,55 @@
 <div class="container w-50">
   <h3>Spending plan</h3>
     <%= form_for @spending_plan, remote: true do |form| %>
+        <% @spending_plan.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
         <div class="row mb-5">
           <input type="hidden" name="item[user_id]" id="user_id" value="<%= current_user.id %>">
           <div class="col-md-4">
             <label for="month">month: </label>
-            <select name="item[month]" class="form-control" id="month">
-              <option value="<%= Date.current.month %>" selected="selected"><%= Date.current.month %></option>
-              <% for i in 1..12 %>
-                <option value="<%= i %>"><%= i %></option>
-              <% end %>
-            </select>
+            <%= form.select :month, (1..12).to_a, {}, {class: 'form-control'} %>
+<!--            <select name="item[month]" class="form-control" id="month">-->
+<!--              <option value="<%#= Date.current.month %>" selected="selected"><%#= Date.current.month %></option>-->
+              <%# for i in 1..12 %>
+<!--                <option value="<%#= i %>"><%#= i %></option>-->
+              <%# end %>
+<!--            </select>-->
           </div>
           <div class="col-md-4">
             <label for="year">year: </label>
-            <select name="item[year]" id="year" class="form-control">
-              <option value="<%= Date.current.year %>" selected="selected"><%= Date.current.year %></option>
-              <% for i in Date.current.year..(Date.current.year + 10) %>
-                <option value="<%= i %>"><%= i %></option>
-              <% end %>
-            </select>
+            <%= form.select :year, (Date.current.year..(Date.current.year + 10)).to_a, {}, {class: 'form-control'} %>
+<!--            <select name="item[year]" id="year" class="form-control">-->
+<!--              <option value="<%#= Date.current.year %>" selected="selected"><%#= Date.current.year %></option>-->
+              <%# for i in Date.current.year..(Date.current.year + 10) %>
+<!--                <option value="<%#= i %>"><%#= i %></option>-->
+              <%# end %>
+<!--            </select>-->
           </div>
           <div class="col-md-4">
             <label for="max">max: </label>
-            <input type="number" id="max" name="item[max]" class="form-control" min="0">
+            <%= form.number_field :max, class: "form-control", min: 0 %>
+<!--            <input type="number" id="max" name="item[max]" class="form-control" min="0">-->
           </div>
         </div>
     <div class="row mb-5">
-      <div class="col-md-6">
-        <label for="fee_name">Name</label>
-        <input type="text" class="form-control" name="fee[issue]" id="fee_name">
-      </div>
-      <div class="col-md-6">
-        <label for="fee">fee</label>
-        <input type="number" class="form-control" name="fee[expense]" id="expense">
-      </div>
-    </div>
+      <%= form.fields_for :plan_issues do |plan_issue_form| %>
+        <div class="col-md-6">
+          <label for="fee_name">Name</label>
+          <%= plan_issue_form.text_field :issue, class: "form-control", id: "fee_name" %>
+<!--          <input type="text" class="form-control" name="fee[issue]" id="fee_name">-->
+        </div>
+        <div class="col-md-6">
+          <label for="fee">fee</label>
+          <%= plan_issue_form.number_field :expense, class: "form-control", id: "expense" %>
+<!--          <input type="number" class="form-control" name="fee[expense]" id="expense">-->
+        </div>
+        </div>
+      <% end %>
+    <%= form.submit "Submit", class: "btn btn-primary" %>
     <% end %>
   <div class="row ">
-    <button class="btn btn-primary btn-submit">Submit</button>
+<!--    <button class="btn btn-primary btn-submit__">Submit</button>-->
   </div>
 </div>
 <script type="text/javascript" charset="utf-8">

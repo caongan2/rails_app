@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       get :export_excel
     end
   end
+  post "spending_plan/:id/edit", to: "spending_plan#update"
   get "spending_plan", to: "spending_plan#index", as: :plan_search
   post "spending_plan_post", to: "spending_plan#create", as: :spending_plan_post
   as :spending_plan do
